@@ -6,11 +6,22 @@ if rclone mount --daemon google-drive: ~/google-drive/; then
 fi
 
 while true
-do 
-	result=$(find ~/.librewolf -type f -name "places.sqlite")
-	sqlite3 -json $result 'select * from moz_places' > history.json
+do
+	echo 'Locating...'
+	if path=$(find ~/.librewolf -type f -name "places.sqlite"); then
+		echo 'Done'
+	fi
+	echo 'Extracting...'
+	if sqlite3 -json $path 'select * from moz_places' > data.json; then
+		echo 'Done'
+	fi
+	echo 'Parsing...'
+	if jq '.[] | .url' data.json > history.txt; then
+		echo 'Done'
+	fi
 	echo 'Uploading...'
-	scp history.json ~/google-drive/'Browsing History'/history.json
-	echo 'Done'
-	sleep 10
+	if scp history.txt ~/google-drive/'Browsing History'/history.txt; then
+		echo 'Done'
+	fi
+	sleep 30
 done

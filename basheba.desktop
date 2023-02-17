@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Version=1.0
-Name=basheba
-Comment=basheba script
-Exec=~/Documents/Git/basheba/basheba.sh
-StartupNotify=false
-Terminal=false
