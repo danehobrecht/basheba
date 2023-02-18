@@ -1,9 +1,7 @@
 cd && mkdir google-drive
 rclone config
 	Google Drive
-rclone mount google-drive: ~/google-drive
-sudo pacman -S cronie
-sudo systemctl enable cronie
-sudo systemctl start cronie
-sudo VISUAL=nano crontab -e
-	@reboot /home/user/path/to/basheba.sh
+sudo cp basheba.service /etc/systemd/user/basheba.service
+systemctl --user enable basheba.service
+systemctl --user start basheba.service
+systemctl --user status basheba.service
