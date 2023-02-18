@@ -1,27 +1,36 @@
 #!/bin/bash
 
-echo 'Mounting...'
+printf 'Mounting...\t'
 if rclone mount --daemon google-drive: ~/google-drive/; then
-	echo 'Done'
+	printf 'Done'
 fi
 
 while true
 do
-	echo 'Locating...'
+	printf 'Locating...\t'
 	if path=$(find ~/.librewolf -type f -name "places.sqlite"); then
-		echo 'Done'
+		printf 'Done'
 	fi
-	echo 'Extracting...'
-	if sqlite3 -json $path 'select * from moz_places' > data.json; then
-		echo 'Done'
+	printf '\nDuplicating...\t'
+	if cp $path cache/places.sqlite; then
+		printf 'Done'
 	fi
-	echo 'Parsing...'
-	if jq '.[] | .url' data.json > history.txt; then
-		echo 'Done'
+	printf '\nOverwriting...\t'
+	if cp cache/places.sqlite $path; then
+		printf 'Done'
 	fi
-	echo 'Uploading...'
+	printf '\nExtracting...\t'
+	if sqlite3 -json cache/places.sqlite 'select * from moz_places' > cache/data.json; then
+		printf 'Done'
+	fi
+	printf '\nParsing...\t'
+	if jq '.[] | .url' cache/data.json > history.txt; then
+		printf 'Done'
+	fi
+	printf '\nUploading...\t'
 	if scp history.txt ~/google-drive/'Browsing History'/history.txt; then
-		echo 'Done'
+		printf 'Done'
 	fi
-	sleep 30
+	printf '\nCycle complete!\n\n'
+	sleep 8
 done
