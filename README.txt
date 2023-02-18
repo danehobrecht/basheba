@@ -1,4 +1,7 @@
+cd && mkdir google-drive
 rclone config
+	Google Drive
+rclone mount google-drive: ~/google-drive
 sudo pacman -S cronie
 sudo systemctl enable cronie
 sudo systemctl start cronie
