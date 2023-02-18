@@ -1,0 +1,4 @@
+sudo pacman -S rclone cronie
+
+rclone
+cronie
